@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  postgres:
+    restart: always
+    container_name: postgres-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "dbtDB"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database:/var/lib/posgresql/data
+      - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data/visits.csv:/var/lib/postgresql/files/visits.csv
+      - ./data/cards.csv:/var/lib/postgresql/files/cards.csv
+      - ./data/cards.csv:/var/lib/postgresql/files/dop_info_date.csv
+      - ./data/cards.csv:/var/lib/postgresql/files/dop_info_case_ump.csv
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dbtDB"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  dbt:
+    container_name: dbt
+    build: .
+    image: dbt-app
+    volumes:
+      - ./:/usr/src/dbt
+    depends_on:
+      - postgres
+
+
+networks:
+  default:
+    name: dbt-net

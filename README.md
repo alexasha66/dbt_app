@@ -22,7 +22,7 @@ Dbt init dbt_project
 
 
 
-
+-------------------
 
 В чем нужна помощь
 
@@ -41,7 +41,7 @@ Dbt init dbt_project
 дату ctrldate берем из таблицы источника dop_info_date, а vid берем из dop_info_ump, используя case выражение
 
 
-
+-------------------
 
 
 Примерная логика:
